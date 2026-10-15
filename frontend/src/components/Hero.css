@@ -1,0 +1,208 @@
+.hero {
+  min-height: 650px;
+  padding: 80px 8%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 60px;
+  background: linear-gradient(135deg, #ffffff 0%, #eef7ff 100%);
+}
+
+.hero-content {
+  max-width: 650px;
+}
+
+.hero-tag {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 30px;
+  background-color: #e8f4ff;
+  color: #168acb;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.hero h1 {
+  font-size: 56px;
+  line-height: 1.1;
+  color: #123b73;
+  margin-bottom: 24px;
+}
+
+.hero h1 span {
+  color: #f59e0b;
+  display: block;
+}
+
+.hero-description {
+  font-size: 19px;
+  line-height: 1.7;
+  color: #526174;
+  max-width: 580px;
+  margin-bottom: 32px;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 16px;
+}
+
+.primary-btn,
+.secondary-btn {
+  padding: 14px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.primary-btn {
+  border: none;
+  background-color: #123b73;
+  color: white;
+}
+
+.primary-btn:hover {
+  background-color: #168acb;
+}
+
+.secondary-btn {
+  border: 1px solid #123b73;
+  background-color: white;
+  color: #123b73;
+}
+
+.secondary-btn:hover {
+  background-color: #eef7ff;
+}
+
+.hero-visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+
+.voice-card {
+  width: 330px;
+  min-height: 350px;
+  padding: 40px 30px;
+  border-radius: 24px;
+  background: white;
+  box-shadow: 0 20px 50px rgba(18, 59, 115, 0.15);
+  text-align: center;
+}
+
+.mic-icon {
+  width: 90px;
+  height: 90px;
+  margin: 0 auto 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: #fff4dc;
+  font-size: 42px;
+}
+
+.voice-card h3 {
+  color: #123b73;
+  font-size: 22px;
+  margin-bottom: 25px;
+}
+
+.voice-card p {
+  color: #68758a;
+  margin-top: 20px;
+}
+
+.sound-wave {
+  height: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+}
+
+.sound-wave span {
+  width: 6px;
+  border-radius: 10px;
+  background-color: #168acb;
+}
+
+.sound-wave span:nth-child(1) {
+  height: 25px;
+}
+
+.sound-wave span:nth-child(2) {
+  height: 45px;
+}
+
+.sound-wave span:nth-child(3) {
+  height: 60px;
+}
+
+.sound-wave span:nth-child(4) {
+  height: 35px;
+}
+
+.sound-wave span:nth-child(5) {
+  height: 55px;
+}
+
+.sound-wave span:nth-child(6) {
+  height: 40px;
+}
+
+.sound-wave span:nth-child(7) {
+  height: 25px;
+}
+
+
+@media (max-width: 768px) {
+  .hero {
+    flex-direction: column;
+    padding: 35px 5%;
+    gap: 40px;
+    text-align: center;
+  }
+
+  .hero-content {
+    max-width: 100%;
+  }
+
+  .hero-tag {
+    font-size: 15px;
+    padding: 8px 14px;
+  }
+
+  .hero h1 {
+    font-size: 34px;
+    line-height: 1.15;
+    margin-bottom: 20px;
+  }
+
+  .hero h1 span {
+    display: inline;
+  }
+
+  .hero-description {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 25px;
+  }
+
+  .hero-buttons {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .hero-visual {
+    width: 100%;
+  }
+
+  .voice-card {
+    width: 100%;
+    max-width: 330px;
+  }
+}

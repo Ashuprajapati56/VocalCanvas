@@ -1,0 +1,104 @@
+/* Signup.css - Premium Update */
+.auth-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 85vh;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); /* Subtle premium background */
+    padding: 20px;
+}
+
+.signup-container {
+    padding: 50px 40px;
+    width: 100%;
+    max-width: 420px;
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0px 15px 35px rgba(18, 59, 115, 0.1); /* Deep soft shadow */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    border-top: 5px solid #f59e0b; /* Vocal Canvas Orange accent line */
+    position: relative;
+    overflow: hidden;
+}
+
+.signup-heading {
+    color: #123b73; /* Vocal Canvas Navy */
+    margin-bottom: 30px;
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.signup-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.signup-input {
+    width: 100%;
+    padding: 15px 18px;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 10px;
+    font-size: 16px;
+    outline: none;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+    background-color: #f8fafc;
+    color: #1e293b;
+}
+
+.signup-input::placeholder {
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+/* Jab input par type karna shuru karein */
+.signup-input:focus {
+    border-color: #123b73;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 4px rgba(18, 59, 115, 0.1); /* Blue glow effect */
+}
+
+.signup-button {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+}
+
+.signup-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+}
+
+.signup-button:active {
+    transform: translateY(1px);
+}
+
+.auth-link {
+    margin-top: 25px;
+    font-size: 15px;
+    color: #64748b;
+}
+
+.auth-link a {
+    color: #123b73;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.auth-link a:hover {
+    color: #168acb;
+    text-decoration: underline;
+}
