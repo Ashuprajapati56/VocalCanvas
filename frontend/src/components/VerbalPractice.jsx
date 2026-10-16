@@ -1,11 +1,21 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 const VerbalPractice = () => {
     const [isRecording, setIsRecording] = useState(false);
     const [transcript, setTranscript] = useState('');
     const [feedback, setFeedback] = useState(null);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
+    
+    // Naya state: Check karne ke liye ki AI abhi bol raha hai ya nahi
+    const [isSpeaking, setIsSpeaking] = useState(false); 
     const recognitionRef = useRef(null);
+
+    // Jab user dusre page par jaye toh aawaz band kar dena
+    useEffect(() => {
+        return () => {
+            window.speechSynthesis.cancel();
+        };
+    }, []);
 
     const startRecording = () => {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -47,7 +57,6 @@ const VerbalPractice = () => {
         }
     };
 
-    // AI se feedback mangwane aur history save karne ka function
     const getAIFeedback = async () => {
         if (!transcript) {
             alert("Pehle thoda English mein baat toh karo! 🎤");
@@ -67,7 +76,6 @@ const VerbalPractice = () => {
             if (response.ok && data.success) {
                 setFeedback(data.feedback);
 
-                // === NAYA CODE: History Database mein Save karo ===
                 const userId = localStorage.getItem('userId');
                 if (userId) {
                     try {
@@ -80,15 +88,10 @@ const VerbalPractice = () => {
                                 feedback: data.feedback 
                             })
                         });
-                        console.log("History saved successfully in Database! 🚀");
                     } catch (err) {
                         console.error("Failed to save history in DB:", err);
                     }
-                } else {
-                    console.log("User ID not found in localStorage. History not saved.");
                 }
-                // ===================================================
-
             } else {
                 alert("AI Error: " + (data.message || "Something went wrong"));
             }
@@ -98,6 +101,32 @@ const VerbalPractice = () => {
         }
         setIsAnalyzing(false);
     };
+
+    // ==========================================
+    // NAYA CODE: AI Feedback Padhne ka Function
+    // ==========================================
+    const toggleSpeech = () => {
+        if (!feedback) return;
+
+        // Agar pehle se bol raha hai, toh chup karao
+        if (isSpeaking) {
+            window.speechSynthesis.cancel();
+            setIsSpeaking(false);
+        } else {
+            // Agar chup hai, toh bolna shuru karo
+            const utterance = new SpeechSynthesisUtterance(feedback);
+            utterance.lang = 'en-US'; // English accent
+            utterance.rate = 0.9; // Thoda aaram se bolega taaki samajh aaye
+            
+            utterance.onend = () => {
+                setIsSpeaking(false);
+            };
+
+            window.speechSynthesis.speak(utterance);
+            setIsSpeaking(true);
+        }
+    };
+    // ==========================================
 
     return (
         <div style={{ padding: '40px 20px', textAlign: 'center', minHeight: '80vh', backgroundColor: '#f8fafc' }}>
@@ -124,7 +153,6 @@ const VerbalPractice = () => {
                 )}
             </div>
 
-            {/* Transcript Box */}
             <div style={{ width: '100%', maxWidth: '700px', minHeight: '150px', margin: '0 auto', padding: '25px', border: '2px dashed #cbd5e1', borderRadius: '16px', backgroundColor: 'white', textAlign: 'left', marginBottom: '20px' }}>
                 <h4 style={{ margin: '0 0 10px 0', color: '#f59e0b', fontSize: '18px' }}>Live Transcript:</h4>
                 <p style={{ color: '#334155', fontSize: '18px', lineHeight: '1.6' }}>
@@ -132,7 +160,6 @@ const VerbalPractice = () => {
                 </p>
             </div>
 
-            {/* AI Action Button */}
             {transcript && !isRecording && (
                 <button 
                     onClick={getAIFeedback}
@@ -143,11 +170,21 @@ const VerbalPractice = () => {
                 </button>
             )}
 
-            {/* AI Feedback Box */}
             {feedback && (
-                <div style={{ width: '100%', maxWidth: '700px', margin: '30px auto 0', padding: '30px', borderRadius: '16px', backgroundColor: '#eff6ff', border: '1px solid #bfdbfe', textAlign: 'left', whiteSpace: 'pre-line' }}>
-                    <h3 style={{ margin: '0 0 15px 0', color: '#1e3a8a' }}>📊 Your Performance Coach:</h3>
-                    <div style={{ color: '#1e40af', fontSize: '16px', lineHeight: '1.7' }}>
+                <div style={{ width: '100%', maxWidth: '700px', margin: '30px auto 0', padding: '30px', borderRadius: '16px', backgroundColor: '#eff6ff', border: '1px solid #bfdbfe', textAlign: 'left' }}>
+                    
+                    {/* NAYA BUTTON: Read Feedback */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+                        <h3 style={{ margin: '0', color: '#1e3a8a' }}>📊 Your Performance Coach:</h3>
+                        <button 
+                            onClick={toggleSpeech}
+                            style={{ padding: '8px 16px', backgroundColor: isSpeaking ? '#ef4444' : '#10b981', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}
+                        >
+                            {isSpeaking ? "⏹️ Stop Audio" : "🔊 Read Feedback"}
+                        </button>
+                    </div>
+
+                    <div style={{ color: '#1e40af', fontSize: '16px', lineHeight: '1.7', whiteSpace: 'pre-line' }}>
                         {feedback}
                     </div>
                 </div>
