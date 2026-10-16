@@ -47,7 +47,7 @@ const VerbalPractice = () => {
         }
     };
 
-    // AI se feedback mangwane ka function
+    // AI se feedback mangwane aur history save karne ka function
     const getAIFeedback = async () => {
         if (!transcript) {
             alert("Pehle thoda English mein baat toh karo! 🎤");
@@ -66,6 +66,29 @@ const VerbalPractice = () => {
             
             if (response.ok && data.success) {
                 setFeedback(data.feedback);
+
+                // === NAYA CODE: History Database mein Save karo ===
+                const userId = localStorage.getItem('userId');
+                if (userId) {
+                    try {
+                        await fetch('http://localhost:5000/api/history', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ 
+                                userId: userId, 
+                                transcript: transcript, 
+                                feedback: data.feedback 
+                            })
+                        });
+                        console.log("History saved successfully in Database! 🚀");
+                    } catch (err) {
+                        console.error("Failed to save history in DB:", err);
+                    }
+                } else {
+                    console.log("User ID not found in localStorage. History not saved.");
+                }
+                // ===================================================
+
             } else {
                 alert("AI Error: " + (data.message || "Something went wrong"));
             }

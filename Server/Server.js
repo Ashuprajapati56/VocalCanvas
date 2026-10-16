@@ -7,6 +7,8 @@ const { GoogleGenAI } = require('@google/genai');
 
 const bcrypt = require('bcryptjs');
 const User = require('./models/User'); 
+// 1. NAYA CHANGE: PracticeHistory model import kiya
+const PracticeHistory = require('./models/PracticeHistory'); 
 
 const ai = new GoogleGenAI({
     apiKey: process.env.GEMINI_API_KEY
@@ -54,7 +56,7 @@ app.post('/api/signup', async (req, res) => {
     }
 });
 
-// --- USER LOGIN API (Ab yeh baahar aur alag hai) ---
+// --- USER LOGIN API ---
 app.post('/api/login', async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -142,6 +144,42 @@ Keep the feedback simple, encouraging and easy for a beginner to understand.
         })
     }
 });
+
+// ==========================================
+// 2. NAYA CHANGE: HISTORY ROUTES ADD KIYE HAIN
+// ==========================================
+
+// History Save karne ka route (Jab user AI feedback generate karega tab run hoga)
+app.post('/api/history', async (req, res) => {
+    try {
+        const { userId, transcript, feedback } = req.body;
+        
+        const newHistory = new PracticeHistory({
+            userId,
+            transcript,
+            feedback
+        });
+
+        await newHistory.save();
+        res.status(201).json({ success: true, message: "History saved successfully!" });
+    } catch (error) {
+        console.error("History Save Error:", error);
+        res.status(500).json({ success: false, message: "Failed to save history" });
+    }
+});
+
+// User ki purani History mangwane ka route (Dashboard ke liye)
+app.get('/api/history/:userId', async (req, res) => {
+    try {
+        const history = await PracticeHistory.find({ userId: req.params.userId }).sort({ date: -1 });
+        res.json({ success: true, data: history });
+    } catch (error) {
+        console.error("Fetch History Error:", error);
+        res.status(500).json({ success: false, message: "Failed to fetch history" });
+    }
+});
+// ==========================================
+
 
 // --- DATABASE CONNECTION ---
 mongoose.connect(process.env.MONGO_URI)

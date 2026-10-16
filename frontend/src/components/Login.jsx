@@ -25,6 +25,7 @@ const Login = () => {
             if (response.ok) {
                 // 1. Token save kiya
                 localStorage.setItem('token', data.token);
+                localStorage.setItem('userId', data.user.id);
                 alert("Login Successful! 🎉 Welcome back to Vocal Canvas.");
                 
                 // 2. User ko seedha Practice page par bhej diya (Yeh line add ki hai)

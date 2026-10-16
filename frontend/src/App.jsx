@@ -8,6 +8,7 @@ import Features from './components/Features'
 import Modules from './components/Modules'
 import VerbalPractice from './components/VerbalPractice'
 import PrivateRoute from './components/PrivateRoute' // <-- Naya Import
+import Dashboard from './components/Dashboard'
 
 const HomePage = () => {
   return (
@@ -28,7 +29,14 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} /> 
-          
+          <Route 
+    path="/dashboard" 
+    element={
+        <PrivateRoute>
+            <Dashboard />
+        </PrivateRoute>
+    } 
+/>
           {/* Practice route ab Protected hai! */}
           <Route 
             path="/practice" 

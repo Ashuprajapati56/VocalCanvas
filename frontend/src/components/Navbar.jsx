@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom' // useNavigate add kiya
+import { Link, useNavigate } from 'react-router-dom' 
 import './Navbar.css'
 
 function Navbar() {
@@ -14,6 +14,7 @@ function Navbar() {
   // Logout function
   const handleLogout = () => {
     localStorage.removeItem('token') // Ticket delete kar do
+    localStorage.removeItem('userId') // NAYA CHANGE: User ID bhi delete kar do
     closeMenu()
     navigate('/login') // Wapas login par bhej do
   }
@@ -30,6 +31,12 @@ function Navbar() {
           <Link to="/" onClick={closeMenu}>Features</Link>
           <Link to="/" onClick={closeMenu}>Learn</Link>
           <Link to="/practice" onClick={closeMenu}>Practice</Link>
+          
+          {/* NAYA CHANGE: Dashboard link sirf tab dikhega jab token hoga */}
+          {token && (
+            <Link to="/dashboard" onClick={closeMenu}>Dashboard</Link>
+          )}
+          
           <Link to="/" onClick={closeMenu}>About</Link>
         </div>
 
