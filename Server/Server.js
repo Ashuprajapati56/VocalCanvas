@@ -96,7 +96,7 @@ app.post('/api/feedback', async (req, res) => {
 
     try {
         const response = await ai.models.generateContent({
-            model: "gemini-3.7-flash",
+            model: "gemini-3.8-flash",
             contents: `
 You are an English speaking coach for college students.
 
@@ -157,4 +157,3 @@ const PORT = 5000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
-s

@@ -133,4 +133,4 @@ const VerbalPractice = () => {
     );
 };
 
-export default VerbalPractice;s
+export default VerbalPractice;
