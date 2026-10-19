@@ -7,7 +7,6 @@ const { GoogleGenAI } = require('@google/genai');
 
 const bcrypt = require('bcryptjs');
 const User = require('./models/User'); 
-// 1. NAYA CHANGE: PracticeHistory model import kiya
 const PracticeHistory = require('./models/PracticeHistory'); 
 
 const ai = new GoogleGenAI({
@@ -23,13 +22,17 @@ app.use(express.json());
 app.get('/', (req, res) => {
   res.json({
     message: 'Vocal Canvas backend is running!'
-  })
+  });
 });
 
 // --- USER SIGNUP API ---
 app.post('/api/signup', async (req, res) => {
     try {
         const { name, email, password } = req.body;
+
+        if (!name || !email || !password) {
+            return res.status(400).json({ message: "All fields are required!" });
+        }
 
         let existingUser = await User.findOne({ email });
         if (existingUser) {
@@ -90,69 +93,91 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-// --- VERBAL PRACTICE FEEDBACK ROUTE ---
+// =========================================================
+// UPDATED: VERBAL PRACTICE FEEDBACK ROUTE (Section 4.4 & 4.14)
+// =========================================================
 app.post('/api/feedback', async (req, res) => {
-    const { transcript } = req.body
+    const { transcript, category, promptText } = req.body;
 
-    console.log('Received transcript:', transcript)
+    // 1. Validation: Empty ya oversized transcript reject karo
+    if (!transcript || typeof transcript !== 'string' || transcript.trim().length === 0) {
+        return res.status(400).json({ 
+            success: false, 
+            message: 'Transcript cannot be empty. Please speak or type your answer.' 
+        });
+    }
+
+    if (transcript.length > 2000) {
+        return res.status(400).json({ 
+            success: false, 
+            message: 'Transcript is too long (max 2000 characters). Please keep your response concise.' 
+        });
+    }
+
+    console.log(`Received transcript [${category || 'General'}]:`, transcript);
 
     try {
         const response = await ai.models.generateContent({
             model: "gemini-3.8-flash",
             contents: `
-You are an English speaking coach for college students.
+You are an encouraging English speaking coach for college students.
 
-Analyze the following spoken English transcript:
+Activity Goal: ${category || 'General Speaking'}
+Prompt Given to Student: "${promptText || 'Free speaking practice'}"
+Student's Response Transcript: "${transcript.trim()}"
 
-"${transcript}"
+Give structured feedback in this exact format:
 
-Give feedback in this exact format:
-
-Grammar: X/10
-Fluency: X/10
+Approximate Guidance Scores (Text-based):
+Grammar & Sentence Construction: X/10
 Vocabulary: X/10
-Confidence: X/10
+Fluency (Text Observation): X/10
 
 What you did well:
-- Give 2 short points
+- Give 2 short, supportive points
 
 Improve this:
-- Give 2 short points
+- Give 2 specific, beginner-friendly points
 
 Better sentence:
-- Give one improved version of the student's sentence.
+- Give one natural, improved version of the student's main sentence.
 
-Keep the feedback simple, encouraging and easy for a beginner to understand.
+Next task:
+- Give one short, clear action for their immediate retry.
+
+Keep the language simple, supportive, and easy for a beginner to understand.
 `
-        })
+        });
 
-        const feedback = response.text
-
-        console.log('AI Feedback:', feedback)
+        const feedback = response.text;
 
         res.json({
             success: true,
             feedback: feedback
-        })
+        });
 
     } catch (error) {
-        console.error('Gemini Error:', error)
+        console.error('Gemini Error:', error);
 
         res.status(500).json({
             success: false,
-            message: 'Failed to generate AI feedback'
-        })
+            message: 'Failed to generate AI feedback. Please try again.'
+        });
     }
 });
 
 // ==========================================
-// 2. NAYA CHANGE: HISTORY ROUTES ADD KIYE HAIN
+// HISTORY ROUTES (SAVE, FETCH & DELETE)
 // ==========================================
 
-// History Save karne ka route (Jab user AI feedback generate karega tab run hoga)
+// 1. History Save karne ka route
 app.post('/api/history', async (req, res) => {
     try {
         const { userId, transcript, feedback } = req.body;
+
+        if (!userId || !transcript || !feedback) {
+            return res.status(400).json({ success: false, message: "Missing required history fields" });
+        }
         
         const newHistory = new PracticeHistory({
             userId,
@@ -168,7 +193,7 @@ app.post('/api/history', async (req, res) => {
     }
 });
 
-// User ki purani History mangwane ka route (Dashboard ke liye)
+// 2. User ki purani History mangwane ka route (Dashboard ke liye)
 app.get('/api/history/:userId', async (req, res) => {
     try {
         const history = await PracticeHistory.find({ userId: req.params.userId }).sort({ date: -1 });
@@ -178,8 +203,17 @@ app.get('/api/history/:userId', async (req, res) => {
         res.status(500).json({ success: false, message: "Failed to fetch history" });
     }
 });
-// ==========================================
 
+// 3. Single History Item Delete karne ka route (Section 4.13)
+app.delete('/api/history/:id', async (req, res) => {
+    try {
+        await PracticeHistory.findByIdAndDelete(req.params.id);
+        res.json({ success: true, message: "History item deleted successfully!" });
+    } catch (error) {
+        console.error("Delete History Error:", error);
+        res.status(500).json({ success: false, message: "Failed to delete history item" });
+    }
+});
 
 // --- DATABASE CONNECTION ---
 mongoose.connect(process.env.MONGO_URI)
