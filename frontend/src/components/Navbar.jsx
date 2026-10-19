@@ -14,7 +14,7 @@ function Navbar() {
   // Logout function
   const handleLogout = () => {
     localStorage.removeItem('token') // Ticket delete kar do
-    localStorage.removeItem('userId') // NAYA CHANGE: User ID bhi delete kar do
+    localStorage.removeItem('userId') // User ID bhi delete kar do
     closeMenu()
     navigate('/login') // Wapas login par bhej do
   }
@@ -29,10 +29,11 @@ function Navbar() {
         <div className="nav-links">
           <Link to="/" onClick={closeMenu}>Home</Link>
           <Link to="/" onClick={closeMenu}>Features</Link>
-          <Link to="/" onClick={closeMenu}>Learn</Link>
+          {/* UPDATED: Learn link ab Verbal Ability Quiz par jayega */}
+          <Link to="/verbal-ability" onClick={closeMenu}>Verbal Aptitude</Link>
           <Link to="/practice" onClick={closeMenu}>Practice</Link>
           
-          {/* NAYA CHANGE: Dashboard link sirf tab dikhega jab token hoga */}
+          {/* Dashboard link sirf tab dikhega jab token hoga */}
           {token && (
             <Link to="/dashboard" onClick={closeMenu}>Dashboard</Link>
           )}
