@@ -10,6 +10,7 @@ import PrivateRoute from './components/PrivateRoute'
 import Dashboard from './components/Dashboard'
 import VerbalAbility from './components/VerbalAbility'
 import LearningResources from './components/LearningResources'
+import About from './components/About'
 
 const HomePage = () => {
   return (
@@ -31,9 +32,10 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/verbal-ability" element={<VerbalAbility />} />
+          <Route path="/resources" element={<LearningResources />} />
           
           {/* YAHAN FIX KIYA HAI 👇 */}
-          <Route path="/resources" element={<LearningResources />} />
+          <Route path="/about" element={<About />} />
           
           <Route 
             path="/dashboard" 
@@ -43,7 +45,6 @@ function App() {
               </PrivateRoute>
             } 
           />
-          {/* Practice route ab Protected hai! */}
           <Route 
             path="/practice" 
             element={

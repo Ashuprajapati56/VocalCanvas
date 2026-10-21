@@ -13,10 +13,10 @@ function Navbar() {
 
   // Logout function
   const handleLogout = () => {
-    localStorage.removeItem('token') // Ticket delete kar do
-    localStorage.removeItem('userId') // User ID bhi delete kar do
+    localStorage.removeItem('token') 
+    localStorage.removeItem('userId') 
     closeMenu()
-    navigate('/login') // Wapas login par bhej do
+    navigate('/login') 
   }
 
   return (
@@ -29,26 +29,23 @@ function Navbar() {
         <div className="nav-links">
           <Link to="/" onClick={closeMenu}>Home</Link>
           <Link to="/" onClick={closeMenu}>Features</Link>
-          {/* UPDATED: Learn link ab Verbal Ability Quiz par jayega */}
           <Link to="/verbal-ability" onClick={closeMenu}>Verbal Aptitude</Link>
           <Link to="/practice" onClick={closeMenu}>Practice</Link>
           
-          {/* Dashboard link sirf tab dikhega jab token hoga */}
           {token && (
             <Link to="/dashboard" onClick={closeMenu}>Dashboard</Link>
           )}
           
-          <Link to="/" onClick={closeMenu}>About</Link>
+          {/* YAHAN FIX KIYA HAI 👇 */}
+          <Link to="/about" onClick={closeMenu}>About</Link>
         </div>
 
         <div className="nav-actions">
           {token ? (
-            // Agar TOKEN HAI (User Logged In) -> Toh sirf Logout Button dikhao
             <button className="start-btn" onClick={handleLogout}>
               Logout
             </button>
           ) : (
-            // Agar TOKEN NAHI HAI -> Toh Login / Get Started dikhao
             <>
               <Link to="/login" className="login-btn" onClick={closeMenu}>
                 Login
