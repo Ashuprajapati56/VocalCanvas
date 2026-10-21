@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import './Modules.css'
 
 function Modules() {
@@ -6,44 +7,56 @@ function Modules() {
     {
       number: '01',
       icon: '📚',
-      title: 'English Foundation',
-      description: 'Build your vocabulary, grammar and basic English sentence skills.',
-      button: 'Start Learning'
+      title: 'Learning Resources',
+      description: 'Curated YouTube tutorials to help you master grammar, pronunciation, and aptitude.',
+      button: 'Explore Resources',
+      path: '/resources',
+      isActive: true // ✅ NAYA: Ab yeh active ho gaya hai aur /resources par jayega
     },
     {
       number: '02',
       icon: '💬',
       title: 'Communication Skills',
-      description: 'Develop confidence and learn how to communicate effectively.',
-      button: 'Explore Skills'
+      description: 'Develop confidence and learn how to communicate effectively in daily scenarios.',
+      button: 'Explore Skills',
+      path: '/practice',
+      isActive: true 
     },
     {
       number: '03',
       icon: '🎤',
       title: 'Pronunciation & Fluency',
       description: 'Improve your pronunciation and speak English more naturally.',
-      button: 'Start Practice'
+      button: 'Coming Soon',
+      path: '#',
+      isActive: false // Yeh abhi bhi "Coming Soon" rahega
     },
     {
       number: '04',
       icon: '📊',
       title: 'Presentation Skills',
       description: 'Learn to prepare and deliver clear and confident presentations.',
-      button: 'Learn More'
+      button: 'Learn More',
+      path: '/practice',
+      isActive: true 
     },
     {
       number: '05',
       icon: '💼',
       title: 'Interview & Career',
       description: 'Prepare for interviews, professional communication and placements.',
-      button: 'Prepare Now'
+      button: 'Prepare Now',
+      path: '/practice',
+      isActive: true 
     },
     {
       number: '06',
-      icon: '🎙️',
-      title: 'Verbal Practice',
-      description: 'Practice speaking through real conversations and AI-powered verbal activities.',
-      button: 'Start Speaking'
+      icon: '📝', 
+      title: 'Verbal Aptitude Quiz', 
+      description: 'Practice Placement and GATE English questions with detailed explanations.',
+      button: 'Start Quiz',
+      path: '/verbal-ability',
+      isActive: true 
     }
   ]
 
@@ -88,9 +101,15 @@ function Modules() {
 
             <p>{module.description}</p>
 
-            <button className="module-button">
-              {module.button} →
-            </button>
+            {module.isActive ? (
+              <Link to={module.path} className="module-button" style={{ textDecoration: 'none', display: 'inline-block' }}>
+                {module.button} →
+              </Link>
+            ) : (
+              <span className="module-button" style={{ color: '#94a3b8', cursor: 'not-allowed' }}>
+                ⏳ {module.button}
+              </span>
+            )}
 
           </div>
 

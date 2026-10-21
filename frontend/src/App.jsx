@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Signup from './components/Signup'
 import Login from './components/Login'
@@ -7,9 +6,10 @@ import Hero from './components/Hero'
 import Features from './components/Features'
 import Modules from './components/Modules'
 import VerbalPractice from './components/VerbalPractice'
-import PrivateRoute from './components/PrivateRoute' // <-- Naya Import
+import PrivateRoute from './components/PrivateRoute' 
 import Dashboard from './components/Dashboard'
 import VerbalAbility from './components/VerbalAbility'
+import LearningResources from './components/LearningResources'
 
 const HomePage = () => {
   return (
@@ -31,14 +31,18 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/verbal-ability" element={<VerbalAbility />} />
+          
+          {/* YAHAN FIX KIYA HAI 👇 */}
+          <Route path="/resources" element={<LearningResources />} />
+          
           <Route 
-    path="/dashboard" 
-    element={
-        <PrivateRoute>
-            <Dashboard />
-        </PrivateRoute>
-    } 
-/>
+            path="/dashboard" 
+            element={
+              <PrivateRoute>
+                <Dashboard />
+              </PrivateRoute>
+            } 
+          />
           {/* Practice route ab Protected hai! */}
           <Route 
             path="/practice" 
