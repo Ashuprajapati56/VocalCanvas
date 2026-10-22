@@ -1,8 +1,6 @@
-
 import React from 'react';
 import './About.css';
 
-// Local images import ki hain
 import ashuPhoto from '../assets/ashuphoto.jpeg'; 
 import amanPhoto from '../assets/amanphoto.jpeg';
 
@@ -30,12 +28,7 @@ const About = () => {
                     <div className="team-grid">
                         {/* Member 1: Ashu */}
                         <div className="member-card">
-                            {/* NAYA: Local photo variable use kiya */}
-                            <img 
-                                src={ashuPhoto} 
-                                alt="Ashu Prajapati" 
-                                className="member-image" 
-                            />
+                            <img src={ashuPhoto} alt="Ashu Prajapati" className="member-image" />
                             <h4 className="member-name">Ashu Prajapati</h4>
                             <span className="member-role">Lead Full Stack Developer</span>
                             
@@ -44,6 +37,9 @@ const About = () => {
                             </p>
                             
                             <div className="social-links">
+                                <a href="https://github.com/Ashuprajapati56" target="_blank" rel="noopener noreferrer" className="social-btn btn-github">
+                                    GitHub
+                                </a>
                                 <a href="https://www.linkedin.com/in/ashu-prajapati-508532300" target="_blank" rel="noopener noreferrer" className="social-btn btn-linkedin">
                                     LinkedIn
                                 </a>
@@ -55,12 +51,7 @@ const About = () => {
 
                         {/* Member 2: Aman */}
                         <div className="member-card">
-                            {/* NAYA: Local photo variable use kiya */}
-                            <img 
-                                src={amanPhoto} 
-                                alt="Aman Singh" 
-                                className="member-image" 
-                            />
+                            <img src={amanPhoto} alt="Aman Singh" className="member-image" />
                             <h4 className="member-name">Aman Singh</h4>
                             <span className="member-role">Frontend & UI/UX Developer</span>
                             
@@ -69,6 +60,9 @@ const About = () => {
                             </p>
 
                             <div className="social-links">
+                                <a href="https://github.com/amansingh1107" target="_blank" rel="noopener noreferrer" className="social-btn btn-github">
+                                    GitHub
+                                </a>
                                 <a href="https://www.linkedin.com/in/ashu-prajapati-508532300" target="_blank" rel="noopener noreferrer" className="social-btn btn-linkedin">
                                     LinkedIn
                                 </a>
