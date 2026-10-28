@@ -1,5 +1,3 @@
-
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Signup.css';
@@ -14,7 +12,7 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('[https://vocalcanvas.onrender.com](https://vocalcanvas.onrender.com)/api/login', {
+            const response = await fetch('https://vocalcanvas.onrender.com/api/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
@@ -23,12 +21,9 @@ const Login = () => {
             const data = await response.json();
             
             if (response.ok) {
-                // 1. Token save kiya
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('userId', data.user.id);
                 alert("Login Successful! 🎉 Welcome back to Vocal Canvas.");
-                
-                // 2. User ko seedha Practice page par bhej diya (Yeh line add ki hai)
                 window.location.href = '/practice';
             } else {
                 alert("Error: " + data.message);

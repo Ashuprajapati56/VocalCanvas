@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; // React Router se Link import kiya
+import { Link } from 'react-router-dom';
 import './Signup.css'; 
 
 const Signup = () => {
@@ -12,7 +12,8 @@ const Signup = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('[https://vocalcanvas.onrender.com](https://vocalcanvas.onrender.com)/api/signup', {
+            // Yahan brackets hata diye hain aur exact saaf URL daal diya hai
+            const response = await fetch('https://vocalcanvas.onrender.com/api/signup', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
@@ -32,7 +33,6 @@ const Signup = () => {
     };
 
     return (
-        // Naya auth-wrapper add kiya premium background ke liye
         <div className="auth-wrapper">
             <div className="signup-container">
                 <h2 className="signup-heading">Join Vocal Canvas</h2>
@@ -57,7 +57,6 @@ const Signup = () => {
                     </button>
                 </form>
                 
-                {/* Naya Login Page ka Link */}
                 <p className="auth-link">
                     Already have an account? <Link to="/login">Log in here</Link>
                 </p>
