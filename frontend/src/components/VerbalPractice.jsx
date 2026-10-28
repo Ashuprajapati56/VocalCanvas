@@ -15,7 +15,7 @@ const PRACTICE_PROMPTS = {
     "Presentation": [
         { level: "Easy", text: "Give a 30-second opening hook for a seminar on Artificial Intelligence.", hindi: "आर्टिफिशियल इंटेलिजेंस सेमिनार के लिए 30 सेकंड की आकर्षक शुरुआत करें।" },
         { level: "Normal", text: "Explain how your web application's architecture works from frontend to database.", hindi: "बताएं कि आपके वेब ऐप का आर्किटेक्चर फ्रंटएंड से डेटाबेस तक कैसे काम करता है।" },
-        { level: "Challenge", text: "Conclude a technical presentation and invite questions from the audience confidently.", hindi: "एक टेक्निकल प्रेजेंटेशन का समापन करें और दर्शकों को सवाल पूछने के लिए आमंत्रित करें।" }
+        { level: "Challenge", text: "Conclude a technical presentation and invite questions from the audience confidently.", hindi: "एक तकनीकी प्रेजेंटेशन का समापन करें और दर्शकों को सवाल पूछने के लिए आमंत्रित करें।" }
     ],
     "Verbal Aptitude": [
         { level: "Easy", text: "Use the words 'Collaborate' and 'Consistent' in a meaningful sentence about college life.", hindi: "कॉलेज लाइफ के बारे में एक वाक्य में 'Collaborate' और 'Consistent' शब्दों का प्रयोग करें।" },
@@ -138,7 +138,8 @@ const VerbalPractice = () => {
         setErrorMsg('');
         setIsAnalyzing(true);
         try {
-            const response = await fetch('[https://vocalcanvas.onrender.com](https://vocalcanvas.onrender.com)/api/feedback', {
+            // Yahan clean URL set kar diya hai
+            const response = await fetch('https://vocalcanvas.onrender.com/api/feedback', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
@@ -156,7 +157,8 @@ const VerbalPractice = () => {
                 const userId = localStorage.getItem('userId');
                 if (userId) {
                     try {
-                        await fetch('[https://vocalcanvas.onrender.com](https://vocalcanvas.onrender.com)/api/history', {
+                        // Yahan bhi clean URL set kar diya hai
+                        await fetch('https://vocalcanvas.onrender.com/api/history', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ 
