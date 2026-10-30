@@ -1,20 +1,20 @@
+
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom' 
+import { Link, NavLink, useNavigate } from 'react-router-dom' 
 import './Navbar.css'
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const navigate = useNavigate()
   
-  // Local storage se check karo user logged in hai ya nahi
   const token = localStorage.getItem('token')
 
   const closeMenu = () => setMenuOpen(false)
 
-  // Logout function
   const handleLogout = () => {
     localStorage.removeItem('token') 
     localStorage.removeItem('userId') 
+    localStorage.removeItem('userName') // Naam bhi clear kar diya logout par
     closeMenu()
     navigate('/login') 
   }
@@ -27,17 +27,14 @@ function Navbar() {
 
       <div className={`nav-menu ${menuOpen ? 'active' : ''}`}>
         <div className="nav-links">
-          <Link to="/" onClick={closeMenu}>Home</Link>
-          <Link to="/" onClick={closeMenu}>Features</Link>
-          <Link to="/verbal-ability" onClick={closeMenu}>Verbal Aptitude</Link>
-          <Link to="/practice" onClick={closeMenu}>Practice</Link>
+          <NavLink to="/" className={({isActive}) => isActive ? "nav-link active-link" : "nav-link"} onClick={closeMenu}>Home</NavLink>
+          <NavLink to="/verbal-ability" className={({isActive}) => isActive ? "nav-link active-link" : "nav-link"} onClick={closeMenu}>Verbal Aptitude</NavLink>
+          <NavLink to="/practice" className={({isActive}) => isActive ? "nav-link active-link" : "nav-link"} onClick={closeMenu}>Practice</NavLink>
+          <NavLink to="/about" className={({isActive}) => isActive ? "nav-link active-link" : "nav-link"} onClick={closeMenu}>About</NavLink>
           
           {token && (
-            <Link to="/dashboard" onClick={closeMenu}>Dashboard</Link>
+            <NavLink to="/dashboard" className={({isActive}) => isActive ? "nav-link active-link" : "nav-link"} onClick={closeMenu}>Dashboard</NavLink>
           )}
-          
-          {/* YAHAN FIX KIYA HAI 👇 */}
-          <Link to="/about" onClick={closeMenu}>About</Link>
         </div>
 
         <div className="nav-actions">

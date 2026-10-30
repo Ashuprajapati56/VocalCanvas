@@ -5,6 +5,9 @@ import './Dashboard.css';
 const Dashboard = () => {
     const [history, setHistory] = useState([]);
     const [loading, setLoading] = useState(true);
+    
+    // Nayi line: LocalStorage se naam nikalne ke liye
+    const userName = localStorage.getItem('userName') || 'Student';
 
     useEffect(() => {
         const fetchHistory = async () => {
@@ -54,7 +57,8 @@ const Dashboard = () => {
             <div className="dashboard-content">
                 <div className="dashboard-header">
                     <div>
-                        <h2 className="dashboard-title">Your Progress Dashboard 📈</h2>
+                        {/* Nayi line: Yahan par user ka naam dikhega */}
+                        <h2 className="dashboard-title">Hey {userName}! 👋 Your Progress Dashboard 📈</h2>
                         <p className="dashboard-subtitle">Track your genuine practice sessions, review AI feedback, and pick your next activity.</p>
                     </div>
                     <div className="stats-box">

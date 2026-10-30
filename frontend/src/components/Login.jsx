@@ -23,6 +23,7 @@ const Login = () => {
             if (response.ok) {
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('userId', data.user.id);
+                localStorage.setItem('userName', data.user.name);
                 alert("Login Successful! 🎉 Welcome back to Vocal Canvas.");
                 window.location.href = '/practice';
             } else {
