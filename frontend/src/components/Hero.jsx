@@ -1,18 +1,50 @@
-import './Hero.css'
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import './Hero.css';
 
 function Hero() {
+  const [text, setText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [loopNum, setLoopNum] = useState(0);
+  const [typingSpeed, setTypingSpeed] = useState(150);
+
+  const words = ["Speak Without Fear.", "Ace Your Placements.", "Master Your English."];
+
+  useEffect(() => {
+    let timer = setTimeout(() => handleType(), typingSpeed);
+    return () => clearTimeout(timer);
+  }, [text, isDeleting]);
+
+  const handleType = () => {
+    const i = loopNum % words.length;
+    const fullText = words[i];
+
+    setText(isDeleting ? fullText.substring(0, text.length - 1) : fullText.substring(0, text.length + 1));
+
+    setTypingSpeed(isDeleting ? 50 : 100);
+
+    if (!isDeleting && text === fullText) {
+      setTimeout(() => setIsDeleting(true), 1500); // Word type hone ke baad thoda rukega
+      setTypingSpeed(150);
+    } else if (isDeleting && text === '') {
+      setIsDeleting(false);
+      setLoopNum(loopNum + 1);
+      setTypingSpeed(500); // Naya word shuru hone se pehle ka break
+    }
+  };
+
   return (
     <section className="hero">
-
       <div className="hero-content">
-
         <p className="hero-tag">
           🎓 Built for College Students
         </p>
 
         <h1>
           Build Your Confidence.
-          <span> Speak Without Fear.</span>
+          <br />
+          <span className="typing-text">{text}</span>
+          <span className="cursor">|</span>
         </h1>
 
         <p className="hero-description">
@@ -21,15 +53,14 @@ function Hero() {
         </p>
 
         <div className="hero-buttons">
-          <button className="primary-btn">
+          <Link to="/signup" className="primary-btn" style={{ textDecoration: 'none' }}>
             Start Learning
-          </button>
+          </Link>
 
-          <button className="secondary-btn">
+          <Link to="/verbal-ability" className="secondary-btn" style={{ textDecoration: 'none' }}>
             Explore Modules
-          </button>
+          </Link>
         </div>
-
       </div>
 
       <div className="hero-visual">
@@ -51,9 +82,8 @@ function Hero() {
           <p>AI-powered speaking practice</p>
         </div>
       </div>
-
     </section>
-  )
+  );
 }
 
-export default Hero
+export default Hero;

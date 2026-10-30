@@ -24,14 +24,24 @@
 
 .hero h1 {
   font-size: 56px;
-  line-height: 1.1;
+  line-height: 1.2;
   color: #123b73;
   margin-bottom: 24px;
 }
 
-.hero h1 span {
+.hero h1 .typing-text {
   color: #f59e0b;
-  display: block;
+}
+
+/* Blinking Cursor */
+.hero h1 .cursor {
+  color: #f59e0b;
+  font-weight: 300;
+  animation: blink 1s step-start infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
 }
 
 .hero-description {
@@ -49,11 +59,13 @@
 
 .primary-btn,
 .secondary-btn {
+  display: inline-block;
   padding: 14px 24px;
   border-radius: 8px;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .primary-btn {
@@ -64,6 +76,8 @@
 
 .primary-btn:hover {
   background-color: #168acb;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(22,138,203,0.3);
 }
 
 .secondary-btn {
@@ -74,6 +88,7 @@
 
 .secondary-btn:hover {
   background-color: #eef7ff;
+  transform: translateY(-2px);
 }
 
 .hero-visual {
@@ -91,6 +106,12 @@
   background: white;
   box-shadow: 0 20px 50px rgba(18, 59, 115, 0.15);
   text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.voice-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 25px 55px rgba(18, 59, 115, 0.2);
 }
 
 .mic-icon {
@@ -128,36 +149,22 @@
   width: 6px;
   border-radius: 10px;
   background-color: #168acb;
+  animation: wave 1.2s ease-in-out infinite alternate;
 }
 
-.sound-wave span:nth-child(1) {
-  height: 25px;
+/* Sound wave animation */
+@keyframes wave {
+  0% { transform: scaleY(0.4); }
+  100% { transform: scaleY(1); }
 }
 
-.sound-wave span:nth-child(2) {
-  height: 45px;
-}
-
-.sound-wave span:nth-child(3) {
-  height: 60px;
-}
-
-.sound-wave span:nth-child(4) {
-  height: 35px;
-}
-
-.sound-wave span:nth-child(5) {
-  height: 55px;
-}
-
-.sound-wave span:nth-child(6) {
-  height: 40px;
-}
-
-.sound-wave span:nth-child(7) {
-  height: 25px;
-}
-
+.sound-wave span:nth-child(1) { height: 25px; animation-delay: 0.1s; }
+.sound-wave span:nth-child(2) { height: 45px; animation-delay: 0.3s; }
+.sound-wave span:nth-child(3) { height: 60px; animation-delay: 0.5s; }
+.sound-wave span:nth-child(4) { height: 35px; animation-delay: 0.2s; }
+.sound-wave span:nth-child(5) { height: 55px; animation-delay: 0.4s; }
+.sound-wave span:nth-child(6) { height: 40px; animation-delay: 0.6s; }
+.sound-wave span:nth-child(7) { height: 25px; animation-delay: 0.1s; }
 
 @media (max-width: 768px) {
   .hero {
@@ -166,43 +173,11 @@
     gap: 40px;
     text-align: center;
   }
-
-  .hero-content {
-    max-width: 100%;
-  }
-
-  .hero-tag {
-    font-size: 15px;
-    padding: 8px 14px;
-  }
-
-  .hero h1 {
-    font-size: 34px;
-    line-height: 1.15;
-    margin-bottom: 20px;
-  }
-
-  .hero h1 span {
-    display: inline;
-  }
-
-  .hero-description {
-    font-size: 16px;
-    line-height: 1.6;
-    margin-bottom: 25px;
-  }
-
-  .hero-buttons {
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
-  .hero-visual {
-    width: 100%;
-  }
-
-  .voice-card {
-    width: 100%;
-    max-width: 330px;
-  }
+  .hero-content { max-width: 100%; }
+  .hero-tag { font-size: 15px; padding: 8px 14px; }
+  .hero h1 { font-size: 34px; line-height: 1.2; margin-bottom: 20px; }
+  .hero-description { font-size: 16px; line-height: 1.6; margin-bottom: 25px; }
+  .hero-buttons { justify-content: center; flex-wrap: wrap; }
+  .hero-visual { width: 100%; }
+  .voice-card { width: 100%; max-width: 330px; }
 }
