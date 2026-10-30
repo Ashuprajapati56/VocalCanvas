@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import './Signup.css'; 
 
 const Signup = () => {
     const [formData, setFormData] = useState({ name: '', email: '', password: '' });
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -12,7 +14,6 @@ const Signup = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            // Yahan brackets hata diye hain aur exact saaf URL daal diya hai
             const response = await fetch('https://vocalcanvas.onrender.com/api/signup', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -22,13 +23,16 @@ const Signup = () => {
             const data = await response.json();
             
             if (response.ok) {
-                alert("Registration Successful! 🎉 Check your terminal/MongoDB.");
+                toast.success("Registration Successful! 🎉 Please login.");
+                setTimeout(() => {
+                    navigate('/login');
+                }, 1500);
             } else {
-                alert("Error: " + data.message);
+                toast.error("Error: " + data.message);
             }
         } catch (error) {
             console.error("Error signing up", error);
-            alert("Network Error: Could not reach backend.");
+            toast.error("Network Error: Could not reach backend.");
         }
     };
 

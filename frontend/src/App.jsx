@@ -11,8 +11,9 @@ import Dashboard from './components/Dashboard'
 import VerbalAbility from './components/VerbalAbility'
 import LearningResources from './components/LearningResources'
 import About from './components/About'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-// 👇 YAHAN CHANGE KIYA HAI: About ko HomePage mein daal diya
 const HomePage = () => {
   return (
     <>
@@ -29,6 +30,9 @@ function App() {
     <Router>
       <div className="app">
         <Navbar />
+        {/* Yahan ToastContainer add kiya hai jisse har page par popup dikh sake */}
+        <ToastContainer position="top-right" autoClose={3000} />
+        
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/signup" element={<Signup />} />
@@ -59,4 +63,4 @@ function App() {
   )
 }
 
-export default App
+export default App;

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import './Signup.css';
 
 const Login = () => {
@@ -24,14 +25,17 @@ const Login = () => {
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('userId', data.user.id);
                 localStorage.setItem('userName', data.user.name);
-                alert("Login Successful! 🎉 Welcome back to Vocal Canvas.");
-                window.location.href = '/practice';
+                toast.success("Login Successful! 🎉 Welcome back.");
+                // Thoda delay taaki popup dikhe uske baad redirect ho
+                setTimeout(() => {
+                    window.location.href = '/practice';
+                }, 1000);
             } else {
-                alert("Error: " + data.message);
+                toast.error("Error: " + data.message);
             }
         } catch (error) {
             console.error("Error logging in", error);
-            alert("Network Error: Could not reach backend.");
+            toast.error("Network Error: Could not reach backend.");
         }
     };
 
