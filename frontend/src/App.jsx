@@ -13,6 +13,7 @@ import LearningResources from './components/LearningResources'
 import About from './components/About'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Footer from './components/Footer';
 
 const HomePage = () => {
   return (
@@ -58,6 +59,9 @@ function App() {
             } 
           />
         </Routes>
+
+        {/* Yahan Footer lagaya hai taaki har page ke end mein dikhe */}
+        <Footer />
       </div>
     </Router>
   )
