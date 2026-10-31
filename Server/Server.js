@@ -3,15 +3,16 @@ const jwt = require('jsonwebtoken');
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
-const { GoogleGenAI } = require('@google/genai');
+
+// NAYI STABLE LIBRARY IMPORT
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 const bcrypt = require('bcryptjs');
 const User = require('./models/User'); 
 const PracticeHistory = require('./models/PracticeHistory'); 
 
-const ai = new GoogleGenAI({
-    apiKey: process.env.GEMINI_API_KEY
-});
+// GEMINI SETUP
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 const app = express();
 
@@ -94,7 +95,7 @@ app.post('/api/login', async (req, res) => {
 });
 
 // =========================================================
-// UPDATED: VERBAL PRACTICE FEEDBACK ROUTE (STAR Method & Filler Words)
+// UPDATED: STABLE GEMINI FEEDBACK ROUTE
 // =========================================================
 app.post('/api/feedback', async (req, res) => {
     const { transcript, category, promptText } = req.body;
@@ -116,9 +117,9 @@ app.post('/api/feedback', async (req, res) => {
     console.log(`Received transcript [${category || 'General'}]:`, transcript);
 
     try {
-        const response = await ai.models.generateContent({
-            model: "gemini-pro", // Corrected model name
-            contents: `
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+        const prompt = `
 You are an expert English communication and interview coach preparing college students for product-based tech companies.
 
 Activity Goal: ${category || 'General Speaking'}
@@ -144,10 +145,10 @@ Analyze the transcript and provide structured feedback in this EXACT format:
 
 🎯 Next Step:
 - Give one quick challenge or focus area for their next attempt.
-`
-        });
+`;
 
-        const feedback = response.text;
+        const result = await model.generateContent(prompt);
+        const feedback = result.response.text();
 
         res.json({
             success: true,
