@@ -94,12 +94,11 @@ app.post('/api/login', async (req, res) => {
 });
 
 // =========================================================
-// UPDATED: VERBAL PRACTICE FEEDBACK ROUTE (Section 4.4 & 4.14)
+// UPDATED: VERBAL PRACTICE FEEDBACK ROUTE (STAR Method & Filler Words)
 // =========================================================
 app.post('/api/feedback', async (req, res) => {
     const { transcript, category, promptText } = req.body;
 
-    // 1. Validation: Empty ya oversized transcript reject karo
     if (!transcript || typeof transcript !== 'string' || transcript.trim().length === 0) {
         return res.status(400).json({ 
             success: false, 
@@ -118,34 +117,33 @@ app.post('/api/feedback', async (req, res) => {
 
     try {
         const response = await ai.models.generateContent({
-            model: "gemini-3.8-flash",
+            model: "gemini-1.5-flash", // Corrected model name
             contents: `
-You are an encouraging English speaking coach for college students.
+You are an expert English communication and interview coach preparing college students for product-based tech companies.
 
 Activity Goal: ${category || 'General Speaking'}
 Prompt Given to Student: "${promptText || 'Free speaking practice'}"
 Student's Response Transcript: "${transcript.trim()}"
 
-Give structured feedback in this exact format:
+Analyze the transcript and provide structured feedback in this EXACT format:
 
-Approximate Guidance Scores (Text-based):
-Grammar & Sentence Construction: X/10
-Vocabulary: X/10
-Fluency (Text Observation): X/10
+📊 Performance Metrics:
+- Grammar & Sentence Construction: X/10
+- Vocabulary & Professionalism: X/10
+- Filler Words Detected: Count and list them (e.g., "um", "uh", "like", "basically"). If none, say "Great job! No filler words detected."
+- STAR Method Check: (Evaluate only if Activity Goal is "Interview Prep". State if Situation, Task, Action, and Result were covered or what was missing. If not an interview prompt, say "Not applicable for this prompt.")
 
-What you did well:
-- Give 2 short, supportive points
+✅ What you did well:
+- Give 1-2 short, encouraging points.
 
-Improve this:
-- Give 2 specific, beginner-friendly points
+🛠️ Areas for Improvement:
+- Give 1-2 specific, actionable tips to fix grammar, pacing, or structure.
 
-Better sentence:
-- Give one natural, improved version of the student's main sentence.
+💡 Professional Revision:
+- Provide a natural, confident, and professional version of the student's answer.
 
-Next task:
-- Give one short, clear action for their immediate retry.
-
-Keep the language simple, supportive, and easy for a beginner to understand.
+🎯 Next Step:
+- Give one quick challenge or focus area for their next attempt.
 `
         });
 
@@ -170,7 +168,6 @@ Keep the language simple, supportive, and easy for a beginner to understand.
 // HISTORY ROUTES (SAVE, FETCH & DELETE)
 // ==========================================
 
-// 1. History Save karne ka route
 app.post('/api/history', async (req, res) => {
     try {
         const { userId, transcript, feedback } = req.body;
@@ -193,7 +190,6 @@ app.post('/api/history', async (req, res) => {
     }
 });
 
-// 2. User ki purani History mangwane ka route (Dashboard ke liye)
 app.get('/api/history/:userId', async (req, res) => {
     try {
         const history = await PracticeHistory.find({ userId: req.params.userId }).sort({ date: -1 });
@@ -204,7 +200,6 @@ app.get('/api/history/:userId', async (req, res) => {
     }
 });
 
-// 3. Single History Item Delete karne ka route (Section 4.13)
 app.delete('/api/history/:id', async (req, res) => {
     try {
         await PracticeHistory.findByIdAndDelete(req.params.id);
