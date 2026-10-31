@@ -117,7 +117,7 @@ app.post('/api/feedback', async (req, res) => {
 
     try {
         const response = await ai.models.generateContent({
-            model: "gemini-1.5-flash-latest", // Corrected model name
+            model: "gemini-pro", // Corrected model name
             contents: `
 You are an expert English communication and interview coach preparing college students for product-based tech companies.
 
