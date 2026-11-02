@@ -4,7 +4,7 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 
-// NAYI STABLE LIBRARY IMPORT
+// STABLE LIBRARY IMPORT
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 const bcrypt = require('bcryptjs');
@@ -95,6 +95,65 @@ app.post('/api/login', async (req, res) => {
 });
 
 // =========================================================
+// SELF-HEALING GEMINI HELPER (10X BULLETPROOF FIX)
+// =========================================================
+let cachedWorkingModel = null;
+
+async function generateWithFallback(prompt) {
+    // 1. Priority list of active modern Gemini models (since 1.5 is retired)
+    const candidateModels = [
+        cachedWorkingModel,
+        "gemini-2.5-flash",
+        "gemini-2.0-flash",
+        "gemini-3.8-flash",
+        "gemini-2.5-pro",
+        "gemini-flash-latest"
+    ].filter(Boolean);
+
+    // Try candidate models first
+    for (const modelName of [...new Set(candidateModels)]) {
+        try {
+            const model = genAI.getGenerativeModel({ model: modelName });
+            const result = await model.generateContent(prompt);
+            cachedWorkingModel = modelName; // Cache working model for fast future calls
+            console.log(`✅ Successfully generated using model: ${modelName}`);
+            return result.response.text();
+        } catch (err) {
+            console.warn(`⚠️ Model ${modelName} failed (${err.status || err.message}), trying next...`);
+        }
+    }
+
+    // 2. Dynamic Auto-Discovery Fallback: Query Google API for exact supported models
+    console.log("🔍 Running ListModels auto-discovery for this API key...");
+    const listRes = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models?key=${process.env.GEMINI_API_KEY}`
+    );
+    const listData = await listRes.json();
+
+    if (!listData.models || listData.models.length === 0) {
+        throw new Error(`No models available for this API key. API response: ${JSON.stringify(listData)}`);
+    }
+
+    const supportedModelObj = listData.models.find(m =>
+        m.supportedGenerationMethods &&
+        m.supportedGenerationMethods.includes("generateContent") &&
+        m.name.includes("gemini")
+    );
+
+    if (!supportedModelObj) {
+        throw new Error("No Gemini model supporting generateContent found for your API key.");
+    }
+
+    const discoveredModelName = supportedModelObj.name.replace("models/", "");
+    console.log(`🎯 Auto-discovered active model: ${discoveredModelName}`);
+
+    const model = genAI.getGenerativeModel({ model: discoveredModelName });
+    const result = await model.generateContent(prompt);
+    cachedWorkingModel = discoveredModelName;
+    return result.response.text();
+}
+
+// =========================================================
 // UPDATED: STABLE GEMINI FEEDBACK ROUTE
 // =========================================================
 app.post('/api/feedback', async (req, res) => {
@@ -117,9 +176,6 @@ app.post('/api/feedback', async (req, res) => {
     console.log(`Received transcript [${category || 'General'}]:`, transcript);
 
     try {
-        // BUG FIX: Removed '-latest' tag. Uses the stable base model which is fully supported in v0.24.1
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
         const prompt = `
 You are an expert English communication and interview coach preparing college students for product-based tech companies.
 
@@ -148,8 +204,7 @@ Analyze the transcript and provide structured feedback in this EXACT format:
 - Give one quick challenge or focus area for their next attempt.
 `;
 
-        const result = await model.generateContent(prompt);
-        const feedback = result.response.text();
+        const feedback = await generateWithFallback(prompt);
 
         res.json({
             success: true,
