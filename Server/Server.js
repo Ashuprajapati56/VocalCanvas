@@ -95,62 +95,39 @@ app.post('/api/login', async (req, res) => {
 });
 
 // =========================================================
-// SELF-HEALING GEMINI HELPER (10X BULLETPROOF FIX)
+// FAST & DIRECT GEMINI 3.8 FLASH HELPER (NO TIMEOUTS)
 // =========================================================
-let cachedWorkingModel = null;
+let cachedWorkingModel = "gemini-3.8-flash";
 
-async function generateWithFallback(prompt) {
-    // 1. Priority list of active modern Gemini models (since 1.5 is retired)
+async function generateFastFeedback(prompt) {
     const candidateModels = [
         cachedWorkingModel,
-        "gemini-2.5-flash",
-        "gemini-2.0-flash",
         "gemini-3.8-flash",
-        "gemini-2.5-pro",
         "gemini-flash-latest"
-    ].filter(Boolean);
+    ];
 
-    // Try candidate models first
     for (const modelName of [...new Set(candidateModels)]) {
         try {
-            const model = genAI.getGenerativeModel({ model: modelName });
+            const startTime = Date.now();
+            const model = genAI.getGenerativeModel({ 
+                model: modelName,
+                generationConfig: {
+                    maxOutputTokens: 500, // Prevents long generation timeouts on Render
+                    temperature: 0.7
+                }
+            });
+
             const result = await model.generateContent(prompt);
-            cachedWorkingModel = modelName; // Cache working model for fast future calls
-            console.log(`✅ Successfully generated using model: ${modelName}`);
-            return result.response.text();
+            const responseText = result.response.text();
+            cachedWorkingModel = modelName;
+            console.log(`✅ Generated with ${modelName} in ${((Date.now() - startTime) / 1000).toFixed(2)}s`);
+            return responseText;
         } catch (err) {
-            console.warn(`⚠️ Model ${modelName} failed (${err.status || err.message}), trying next...`);
+            console.warn(`⚠️ Model ${modelName} failed (${err.status || err.message}), trying fallback...`);
         }
     }
 
-    // 2. Dynamic Auto-Discovery Fallback: Query Google API for exact supported models
-    console.log("🔍 Running ListModels auto-discovery for this API key...");
-    const listRes = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models?key=${process.env.GEMINI_API_KEY}`
-    );
-    const listData = await listRes.json();
-
-    if (!listData.models || listData.models.length === 0) {
-        throw new Error(`No models available for this API key. API response: ${JSON.stringify(listData)}`);
-    }
-
-    const supportedModelObj = listData.models.find(m =>
-        m.supportedGenerationMethods &&
-        m.supportedGenerationMethods.includes("generateContent") &&
-        m.name.includes("gemini")
-    );
-
-    if (!supportedModelObj) {
-        throw new Error("No Gemini model supporting generateContent found for your API key.");
-    }
-
-    const discoveredModelName = supportedModelObj.name.replace("models/", "");
-    console.log(`🎯 Auto-discovered active model: ${discoveredModelName}`);
-
-    const model = genAI.getGenerativeModel({ model: discoveredModelName });
-    const result = await model.generateContent(prompt);
-    cachedWorkingModel = discoveredModelName;
-    return result.response.text();
+    throw new Error("All candidate Gemini models failed to respond in time.");
 }
 
 // =========================================================
@@ -177,7 +154,7 @@ app.post('/api/feedback', async (req, res) => {
 
     try {
         const prompt = `
-You are an expert English communication and interview coach preparing college students for product-based tech companies.
+You are an expert English communication and interview coach preparing college students for product-based tech companies. Keep your response concise and fast.
 
 Activity Goal: ${category || 'General Speaking'}
 Prompt Given to Student: "${promptText || 'Free speaking practice'}"
@@ -204,7 +181,7 @@ Analyze the transcript and provide structured feedback in this EXACT format:
 - Give one quick challenge or focus area for their next attempt.
 `;
 
-        const feedback = await generateWithFallback(prompt);
+        const feedback = await generateFastFeedback(prompt);
 
         res.json({
             success: true,
@@ -278,6 +255,7 @@ mongoose.connect(process.env.MONGO_URI)
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+// Explicit 0.0.0.0 binding for Render stability
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
