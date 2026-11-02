@@ -117,7 +117,8 @@ app.post('/api/feedback', async (req, res) => {
     console.log(`Received transcript [${category || 'General'}]:`, transcript);
 
     try {
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        // BUG FIX: Updated to 'gemini-1.5-flash-latest' to resolve 404 Not Found error
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
 
         const prompt = `
 You are an expert English communication and interview coach preparing college students for product-based tech companies.
