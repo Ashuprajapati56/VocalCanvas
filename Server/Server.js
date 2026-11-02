@@ -117,8 +117,8 @@ app.post('/api/feedback', async (req, res) => {
     console.log(`Received transcript [${category || 'General'}]:`, transcript);
 
     try {
-        // BUG FIX: Updated to 'gemini-1.5-flash-latest' to resolve 404 Not Found error
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+        // BUG FIX: Removed '-latest' tag. Uses the stable base model which is fully supported in v0.24.1
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
         const prompt = `
 You are an expert English communication and interview coach preparing college students for product-based tech companies.
